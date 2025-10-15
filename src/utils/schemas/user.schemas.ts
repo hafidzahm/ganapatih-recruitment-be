@@ -5,4 +5,6 @@ export const registerSchema = z.object({
   password: z.string().min(1, 'Password field required'),
 });
 
+export const loginSchema = registerSchema;
 export type RegisterSchemaType = z.infer<typeof registerSchema>;
+export type LoginSchemaType = RegisterSchemaType;
