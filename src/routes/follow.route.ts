@@ -10,4 +10,15 @@ followRoutes.post(
   FollowController.updateFollow,
 );
 
+followRoutes.post(
+  '/follows/:userId',
+  authMiddleware,
+  FollowController.createFollow,
+);
+followRoutes.delete(
+  '/follows/:userId',
+  authMiddleware,
+  FollowController.deleteFollow,
+);
+
 export default followRoutes;
