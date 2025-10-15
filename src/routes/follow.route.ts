@@ -7,16 +7,10 @@ const followRoutes = Router();
 followRoutes.post(
   '/follow/:userid',
   authMiddleware,
-  FollowController.updateFollow,
-);
-
-followRoutes.post(
-  '/follows/:userId',
-  authMiddleware,
   FollowController.createFollow,
 );
 followRoutes.delete(
-  '/follows/:userId',
+  '/follow/:userid',
   authMiddleware,
   FollowController.deleteFollow,
 );
