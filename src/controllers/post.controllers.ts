@@ -47,5 +47,21 @@ class PostController {
       next(error);
     }
   }
+
+  static async getFollowedPost(
+    req: CustomRequest,
+    res: Response,
+    next: NextFunction,
+  ) {
+    try {
+      const loginId = req?.user?.id as string;
+      const post = await PostService.getFollowedPost(loginId);
+      return res.status(200).json({
+        post,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 export default PostController;
