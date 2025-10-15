@@ -86,12 +86,3 @@ class UserController {
 }
 
 export default UserController;
-
-type User = {
-  id: string;
-  username: string;
-};
-
-interface CustomRequest extends Request {
-  user: User | undefined;
-}
