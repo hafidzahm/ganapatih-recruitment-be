@@ -55,9 +55,17 @@ class PostController {
   ) {
     try {
       const loginId = req?.user?.id as string;
-      const post = await PostService.getFollowedPost(loginId);
+      const posts = await PostService.getFollowedPost(loginId);
+      const mappedPost = posts.map((post) => {
+        return {
+          id: post.id,
+          userid: post.user_id,
+          content: post.content,
+          createdat: post.created_at as Date,
+        };
+      });
       return res.status(200).json({
-        post,
+        posts: mappedPost,
       });
     } catch (error) {
       next(error);
