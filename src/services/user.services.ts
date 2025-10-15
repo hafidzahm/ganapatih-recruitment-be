@@ -9,14 +9,16 @@ class UserService {
     //validasi input dulu
     const validatedData = registerSchema.safeParse(data);
     if (validatedData.error) {
-      const errorMessage = validatedData.error.issues.map(
-        (err) => `${err.path} - ${err.message}`,
-      );
+      const errorMessage = validatedData.error.issues.map((err) => {
+        return err.message;
+      });
+
+      const detailError = errorMessage[0];
 
       throw {
         type: 'ZodValidationError',
         message: 'Validation error',
-        details: errorMessage,
+        details: detailError,
       };
     }
 
