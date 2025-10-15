@@ -28,6 +28,10 @@ class UserRepository {
       },
     });
   }
+
+  static async getAll() {
+    return await prisma.users.findMany();
+  }
 }
 
 export default UserRepository;
