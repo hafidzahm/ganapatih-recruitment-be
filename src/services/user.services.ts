@@ -26,6 +26,11 @@ class UserService {
     const user = await UserRepository.register(validatedData.data);
     return user;
   }
+
+  static async findUserByUsername(username: string) {
+    const user = await UserRepository.findByUsername(username);
+    return user;
+  }
 }
 
 export default UserService;
