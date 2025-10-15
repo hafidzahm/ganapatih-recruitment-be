@@ -36,6 +36,18 @@ class FollowController {
       next(error);
     }
   }
+
+  static async createFollow(
+    req: CustomRequest,
+    res: Response,
+    next: NextFunction,
+  ) {}
+
+  static async deleteFollow(
+    req: CustomRequest,
+    res: Response,
+    next: NextFunction,
+  ) {}
 }
 
 export default FollowController;
