@@ -10,6 +10,20 @@ class PostRepository {
       },
     });
   }
+
+  static async getFollowed(loginId: string) {
+    return await prisma.posts.findMany({
+      where: {
+        user: {
+          following: {
+            some: {
+              follower_id: loginId,
+            },
+          },
+        },
+      },
+    });
+  }
 }
 
 export default PostRepository;
