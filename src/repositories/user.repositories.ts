@@ -20,6 +20,14 @@ class UserRepository {
       },
     });
   }
+
+  static async findById(id: string) {
+    return await prisma.users.findFirstOrThrow({
+      where: {
+        id,
+      },
+    });
+  }
 }
 
 export default UserRepository;
