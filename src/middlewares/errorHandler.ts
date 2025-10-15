@@ -29,6 +29,13 @@ export default function errorHandler(
         details: 'No record was found',
       });
     }
+
+    if (error.code === 'P2000') {
+      return res.status(422).json({
+        success: false,
+        message: 'Column character limit has reached',
+      });
+    }
   }
 
   const { JsonWebTokenError } = pkg;
