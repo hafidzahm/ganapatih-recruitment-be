@@ -29,7 +29,6 @@ export default function errorHandler(
     });
   }
 
-  // Handle other error types or send a generic error response
   return res.status(500).json({
     success: false,
     message: 'Internal Server Error',
@@ -39,5 +38,5 @@ export default function errorHandler(
 interface CustomError extends Error {
   type: string;
   message: string;
-  details?: string | unknown[]; // Zod errors typically provide an array of issues
+  details?: string | unknown[];
 }
