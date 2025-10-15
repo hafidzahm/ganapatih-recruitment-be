@@ -15,7 +15,7 @@ class FollowRepository {
     let state = '';
     console.log({ findFollow });
 
-    if (findFollow > 0) {
+    if (findFollow) {
       //unfollow
       await this.delete(loginId, targetId);
       state = 'Unfollow';
@@ -30,7 +30,7 @@ class FollowRepository {
   }
 
   static async find(loginId: string, targetId: string) {
-    return await prisma.follows.count({
+    return await prisma.follows.findFirst({
       where: {
         follower_id: loginId,
         followee_id: targetId,
