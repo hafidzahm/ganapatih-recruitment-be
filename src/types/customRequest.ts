@@ -1,8 +1,11 @@
-type User = {
+import type { Request } from 'express';
+import type { JwtPayload } from 'jsonwebtoken';
+
+export interface UserPayload extends JwtPayload {
   id: string;
   username: string;
-};
+}
 
 export interface CustomRequest extends Request {
-  user: User | undefined;
+  user?: UserPayload;
 }
