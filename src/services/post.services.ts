@@ -6,6 +6,11 @@ class PostService {
     const post = await PostRepository.create(data, userId);
     return post;
   }
+
+  static async getFollowedPost(loginId: string) {
+    const post = await PostRepository.getFollowed(loginId);
+    return post;
+  }
 }
 
 export default PostService;
