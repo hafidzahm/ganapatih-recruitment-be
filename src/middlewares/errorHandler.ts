@@ -1,6 +1,7 @@
 import { Prisma } from '@prisma/client';
 import type { NextFunction, Request, Response } from 'express';
 import type { CustomError } from '../types/customError.ts';
+import pkg from 'jsonwebtoken';
 
 export default function errorHandler(
   error: CustomError,
@@ -28,6 +29,23 @@ export default function errorHandler(
         details: 'No record was found',
       });
     }
+
+    if (error.code === 'P2000') {
+      return res.status(422).json({
+        success: false,
+        message: 'Column character limit has reached',
+      });
+    }
+  }
+
+  const { JsonWebTokenError } = pkg;
+  if (error instanceof JsonWebTokenError) {
+    console.log({ type: 'JsonWebTokenError', error });
+
+    return res.status(401).json({
+      success: false,
+      message: 'Invalid token',
+    });
   }
 
   if (error.type === 'AuthenticationError') {
