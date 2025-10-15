@@ -1,0 +1,29 @@
+import UserRepository from '../repositories/user.repositories.ts';
+import {
+  registerSchema,
+  type RegisterSchemaType,
+} from '../utils/schemas/user.schemas.ts';
+
+class UserService {
+  static async registerUser(data: RegisterSchemaType) {
+    //validasi input dulu
+    const validatedData = registerSchema.safeParse(data);
+    if (validatedData.error) {
+      const errorMessage = validatedData.error.issues.map(
+        (err) => `${err.path} - ${err.message}`,
+      );
+
+      throw {
+        type: 'ZodValidationError',
+        message: 'Validation error',
+        details: errorMessage,
+      };
+    }
+
+    //gas masukin datanya
+    const user = await UserRepository.register(validatedData.data);
+    return user;
+  }
+}
+
+export default UserService;
