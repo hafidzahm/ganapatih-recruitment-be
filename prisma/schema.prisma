@@ -6,10 +6,40 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../src/generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+model Users {
+  id            String   @id @default(uuid()) @db.Char(36)
+  username      String   @unique
+  password_hash String
+  created_at    DateTime @default(now())
+
+  posts     Posts[]
+  followers Follows[] @relation("UserFollowerRelation")
+  Follows   Follows[] @relation("UserFolloweeRelation")
+}
+
+model Posts {
+  id         String   @id @default(uuid()) @db.Char(36)
+  content    String   @db.VarChar(200) //max 200 character
+  created_at DateTime @default(now())
+
+  user    Users  @relation(fields: [user_id], references: [id])
+  user_id String
+}
+
+model Follows {
+  follower_id String
+  follower    Users  @relation("UserFollowerRelation", fields: [follower_id], references: [id])
+  followee_id String
+  following   Users  @relation("UserFolloweeRelation", fields: [followee_id], references: [id])
+
+  created_at DateTime @default(now())
+
+  @@id([follower_id, followee_id])
 }
