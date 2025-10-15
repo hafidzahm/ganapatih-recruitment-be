@@ -11,6 +11,11 @@ class UserService {
     const user = await UserRepository.findByUsername(username);
     return user;
   }
+
+  static async findUserById(id: string) {
+    const user = await UserRepository.findById(id);
+    return user;
+  }
 }
 
 export default UserService;
