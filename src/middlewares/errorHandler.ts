@@ -1,5 +1,6 @@
 import { Prisma } from '@prisma/client';
 import type { NextFunction, Request, Response } from 'express';
+import type { CustomError } from '../types/customError.ts';
 
 export default function errorHandler(
   error: CustomError,
@@ -33,10 +34,4 @@ export default function errorHandler(
     success: false,
     message: 'Internal Server Error',
   });
-}
-
-interface CustomError extends Error {
-  type: string;
-  message: string;
-  details?: string | unknown[];
 }
