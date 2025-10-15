@@ -20,7 +20,7 @@ class FollowController {
           message: 'userId (actor) and userId (target) must different',
         };
       }
-      const targetUser = UserService.findUserById(targetId);
+      const targetUser = await UserService.findUserById(targetId);
       if (!targetUser) {
         throw {
           type: 'NotFound',
@@ -51,7 +51,7 @@ class FollowController {
           message: 'userId (actor) and userId (target) must different',
         };
       }
-      const targetUser = UserService.findUserById(targetId);
+      const targetUser = await UserService.findUserById(targetId);
       if (!targetUser) {
         throw {
           type: 'NotFound',
@@ -96,7 +96,7 @@ class FollowController {
         message: 'userId (actor) and userId (target) must different',
       };
     }
-    const targetUser = UserService.findUserById(targetId);
+    const targetUser = await UserService.findUserById(targetId);
     if (!targetUser) {
       throw {
         type: 'NotFound',

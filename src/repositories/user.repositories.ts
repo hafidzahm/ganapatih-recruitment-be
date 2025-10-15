@@ -14,7 +14,7 @@ class UserRepository {
   }
 
   static async findByUsername(username: string) {
-    return await prisma.users.findFirstOrThrow({
+    return await prisma.users.findUnique({
       where: {
         username,
       },
@@ -22,7 +22,7 @@ class UserRepository {
   }
 
   static async findById(id: string) {
-    return await prisma.users.findFirstOrThrow({
+    return await prisma.users.findUnique({
       where: {
         id,
       },

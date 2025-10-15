@@ -58,7 +58,7 @@ class UserController {
       if (!user) {
         throw {
           type: 'NotFound',
-          message: 'Invalid username/ password',
+          message: 'User not found',
         };
       }
 
