@@ -7,8 +7,13 @@ class PostService {
     return post;
   }
 
-  static async getFollowedPost(loginId: string) {
-    const post = await PostRepository.getFollowed(loginId);
+  static async getFollowedPost(loginId: string, take: number, skip: number) {
+    const post = await PostRepository.getFollowed(loginId, take, skip);
+    return post;
+  }
+
+  static async getCountFollowedPost(loginId: string) {
+    const post = await PostRepository.totalGetFollowed(loginId);
     return post;
   }
 }

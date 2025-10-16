@@ -11,8 +11,25 @@ class PostRepository {
     });
   }
 
-  static async getFollowed(loginId: string) {
+  static async getFollowed(loginId: string, take: number, skip: number) {
     return await prisma.posts.findMany({
+      where: {
+        user: {
+          following: {
+            some: {
+              follower_id: loginId,
+            },
+          },
+        },
+      },
+      take,
+      skip,
+      orderBy: { created_at: 'desc' }, //urutan yang baru
+    });
+  }
+
+  static async totalGetFollowed(loginId: string) {
+    return await prisma.posts.count({
       where: {
         user: {
           following: {

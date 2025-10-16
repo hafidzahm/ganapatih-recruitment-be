@@ -54,8 +54,19 @@ class PostController {
     next: NextFunction,
   ) {
     try {
+      console.log({ query: req?.query });
       const loginId = req?.user?.id as string;
-      const posts = await PostService.getFollowedPost(loginId);
+      const page = Number(req?.query?.page) || 1; // page ke berapa?
+      const limit = Number(req?.query?.limit) || 5; // data per pagenya berapa?
+      const take = limit; // ambil berapa data per page?
+
+      const skip = (page - 1) * take; // mulai ambil data dari urutan ke?
+
+      const totalPost = await PostService.getCountFollowedPost(loginId);
+
+      const totalPage = Math.ceil(Number(totalPost) / limit); // total halaman = total data dibagi dataPerPage yang diambil
+
+      const posts = await PostService.getFollowedPost(loginId, take, skip);
       const mappedPost = posts.map((post) => {
         return {
           id: post.id,
@@ -65,6 +76,9 @@ class PostController {
         };
       });
       return res.status(200).json({
+        page: page,
+        dataPerPage: limit,
+        totalPage: totalPage,
         posts: mappedPost,
       });
     } catch (error) {
