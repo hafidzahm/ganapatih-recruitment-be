@@ -97,9 +97,10 @@ class UserController {
       const take = limit;
       const totalUser = (await UserService.countAllUser(search)) as number;
       const totalPages = Math.ceil(totalUser / limit);
-      const user = await UserService.getAllUser(take, skip, search);
+      const users = await UserService.getAllUser(take, skip, search);
+
       return res.status(200).json({
-        users: user,
+        users: users,
         totalPages,
         page,
         dataPerPage: limit,
