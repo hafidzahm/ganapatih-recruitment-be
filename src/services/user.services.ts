@@ -17,8 +17,8 @@ class UserService {
     return user;
   }
 
-  static async getAllUser() {
-    const user = await UserRepository.getAll();
+  static async getAllUser(username?: string | undefined) {
+    const user = await UserRepository.getAll(username);
     return user;
   }
 }

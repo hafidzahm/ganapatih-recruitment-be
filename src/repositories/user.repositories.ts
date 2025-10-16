@@ -29,8 +29,23 @@ class UserRepository {
     });
   }
 
-  static async getAll() {
-    return await prisma.users.findMany();
+  static async getAll(username?: string | undefined) {
+    if (!username) {
+      return await prisma.users.findMany();
+    } else {
+      return await prisma.users.findMany({
+        where: {
+          username: {
+            contains: username,
+            mode: 'insensitive',
+          },
+        },
+        omit: {
+          password_hash: true,
+          created_at: true,
+        },
+      });
+    }
   }
 }
 

@@ -86,7 +86,9 @@ class UserController {
 
   static async getAll(req: Request, res: Response, next: NextFunction) {
     try {
-      const user = await UserService.getAllUser();
+      console.log({ query: req?.query?.search });
+      const search = req?.query?.search as string;
+      const user = await UserService.getAllUser(search);
       return res.status(200).json({
         user,
       });
