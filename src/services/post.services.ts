@@ -11,6 +11,11 @@ class PostService {
     const post = await PostRepository.getFollowed(loginId);
     return post;
   }
+
+  static async getCountFollowedPost(loginId: string) {
+    const post = await PostRepository.totalGetFollowed(loginId);
+    return post;
+  }
 }
 
 export default PostService;
