@@ -76,6 +76,12 @@ class UserController {
       }
 
       const token = JwtService.sign({ id: user.id, username: user.username });
+      //simpen di cookies
+      const bearerToken = `Bearer ${token}`;
+      res.cookie('Authorization', bearerToken, {
+        maxAge: 900000,
+        httpOnly: true,
+      });
       return res.status(200).json({
         token,
       });
