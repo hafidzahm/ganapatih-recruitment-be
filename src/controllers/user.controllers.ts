@@ -3,6 +3,7 @@ import UserService from '../services/user.services.ts';
 import { loginSchema, registerSchema } from '../utils/schemas/user.schemas.ts';
 import BcryptService from '../utils/bcrypt.ts';
 import JwtService from '../utils/jwt.ts';
+import type { CustomRequest } from '../types/customRequest.ts';
 
 class UserController {
   static async register(req: Request, res: Response, next: NextFunction) {
@@ -76,9 +77,39 @@ class UserController {
       }
 
       const token = JwtService.sign({ id: user.id, username: user.username });
+      //simpen di cookies
+      const bearerToken = `Bearer ${token}`;
+      res.cookie('Authorization', bearerToken, {
+        maxAge: 900000,
+        httpOnly: true,
+      });
       return res.status(200).json({
         token,
       });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async logout(req: CustomRequest, res: Response, next: NextFunction) {
+    try {
+      const user = req?.user;
+      // console.log({ user });
+      if (!user) {
+        throw {
+          type: 'BadRequest',
+          message: 'Logout failed',
+        };
+      } else {
+        res.cookie('Authorization', '', {
+          httpOnly: true,
+          expires: new Date(0),
+        });
+        return res.status(200).json({
+          success: true,
+          message: 'Logout success',
+        });
+      }
     } catch (error) {
       next(error);
     }
@@ -105,6 +136,31 @@ class UserController {
         page,
         dataPerPage: limit,
       });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async getMyProfile(
+    req: CustomRequest,
+    res: Response,
+    next: NextFunction,
+  ) {
+    try {
+      const loginId = req?.user?.id as string;
+      if (!loginId) {
+        throw {
+          type: 'BadRequest',
+          message: 'Failed to get my profile',
+        };
+      } else {
+        const user = await UserService.findUserById(loginId);
+        return res.status(200).json({
+          success: true,
+          message: 'Get my profile successfully finish',
+          user,
+        });
+      }
     } catch (error) {
       next(error);
     }
