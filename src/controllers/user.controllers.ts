@@ -86,9 +86,23 @@ class UserController {
 
   static async getAll(req: Request, res: Response, next: NextFunction) {
     try {
-      const user = await UserService.getAllUser();
+      console.log({ query: req?.query });
+      const search = req?.query?.search as string;
+      let page = (Number(req?.query?.page) as number) || 1;
+      page === 0 ? (page = 1) : page;
+      let limit = (Number(req?.query?.limit) as number) || 10;
+      limit === 0 ? (limit = 1) : limit;
+      const skip = (page - 1) * limit;
+
+      const take = limit;
+      const totalUser = (await UserService.countAllUser(search)) as number;
+      const totalPages = Math.ceil(totalUser / limit);
+      const user = await UserService.getAllUser(take, skip, search);
       return res.status(200).json({
-        user,
+        users: user,
+        totalPages,
+        page,
+        dataPerPage: limit,
       });
     } catch (error) {
       next(error);
