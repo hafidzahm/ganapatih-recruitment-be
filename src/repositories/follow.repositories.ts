@@ -4,8 +4,8 @@ class FollowRepository {
   static async create(loginId: string, targetId: string) {
     return await prisma.follows.create({
       data: {
-        follower_id: loginId,
-        followee_id: targetId,
+        follower_id: targetId,
+        followee_id: loginId,
       },
     });
   }
@@ -32,8 +32,8 @@ class FollowRepository {
   static async find(loginId: string, targetId: string) {
     return await prisma.follows.findFirst({
       where: {
-        follower_id: loginId,
-        followee_id: targetId,
+        follower_id: targetId,
+        followee_id: loginId,
       },
     });
   }
@@ -42,8 +42,8 @@ class FollowRepository {
     return await prisma.follows.findUnique({
       where: {
         follower_id_followee_id: {
-          follower_id: loginId,
-          followee_id: targetId,
+          follower_id: targetId,
+          followee_id: loginId,
         },
       },
     });
@@ -53,8 +53,8 @@ class FollowRepository {
     return await prisma.follows.delete({
       where: {
         follower_id_followee_id: {
-          followee_id: targetId,
-          follower_id: loginId,
+          followee_id: loginId,
+          follower_id: targetId,
         },
       },
     });
