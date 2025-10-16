@@ -17,8 +17,17 @@ class UserService {
     return user;
   }
 
-  static async getAllUser(username?: string | undefined) {
-    const user = await UserRepository.getAll(username);
+  static async getAllUser(
+    take: number,
+    skip: number,
+    username?: string | undefined,
+  ) {
+    const user = await UserRepository.getAll(take, skip, username);
+    return user;
+  }
+
+  static async countAllUser(username?: string) {
+    const user = await UserRepository.count(username);
     return user;
   }
 }
