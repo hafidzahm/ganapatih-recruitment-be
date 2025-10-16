@@ -140,6 +140,31 @@ class UserController {
       next(error);
     }
   }
+
+  static async getMyProfile(
+    req: CustomRequest,
+    res: Response,
+    next: NextFunction,
+  ) {
+    try {
+      const loginId = req?.user?.id as string;
+      if (!loginId) {
+        throw {
+          type: 'BadRequest',
+          message: 'Failed to get my profile',
+        };
+      } else {
+        const user = await UserService.findUserById(loginId);
+        return res.status(200).json({
+          success: true,
+          message: 'Get my profile successfully finish',
+          user,
+        });
+      }
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 export default UserController;
