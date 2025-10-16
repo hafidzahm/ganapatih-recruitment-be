@@ -3,6 +3,7 @@ import UserService from '../services/user.services.ts';
 import { loginSchema, registerSchema } from '../utils/schemas/user.schemas.ts';
 import BcryptService from '../utils/bcrypt.ts';
 import JwtService from '../utils/jwt.ts';
+import type { CustomRequest } from '../types/customRequest.ts';
 
 class UserController {
   static async register(req: Request, res: Response, next: NextFunction) {
@@ -85,6 +86,30 @@ class UserController {
       return res.status(200).json({
         token,
       });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async logout(req: CustomRequest, res: Response, next: NextFunction) {
+    try {
+      const user = req?.user;
+      // console.log({ user });
+      if (!user) {
+        throw {
+          type: 'BadRequest',
+          message: 'Logout failed',
+        };
+      } else {
+        res.cookie('Authorization', '', {
+          httpOnly: true,
+          expires: new Date(0),
+        });
+        return res.status(200).json({
+          success: true,
+          message: 'Logout success',
+        });
+      }
     } catch (error) {
       next(error);
     }
