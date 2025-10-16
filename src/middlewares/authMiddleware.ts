@@ -8,7 +8,7 @@ export default function authMiddleware(
   next: NextFunction,
 ) {
   const authorization = req?.cookies['Authorization'];
-  console.log({ authorization });
+  // console.log({ authorization });
   if (!authorization) {
     throw {
       type: 'AuthenticationError',
