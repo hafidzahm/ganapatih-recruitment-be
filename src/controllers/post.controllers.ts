@@ -54,8 +54,12 @@ class PostController {
     next: NextFunction,
   ) {
     try {
+      console.log({ query: req?.query });
       const loginId = req?.user?.id as string;
-      const posts = await PostService.getFollowedPost(loginId);
+      const take: number;
+      const skip: number;
+      const totalData = await PostService.getCountFollowedPost(loginId);
+      const posts = await PostService.getFollowedPost(loginId, take, skip);
       const mappedPost = posts.map((post) => {
         return {
           id: post.id,

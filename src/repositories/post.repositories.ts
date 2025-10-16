@@ -11,7 +11,7 @@ class PostRepository {
     });
   }
 
-  static async getFollowed(loginId: string) {
+  static async getFollowed(loginId: string, take: number, skip: number) {
     return await prisma.posts.findMany({
       where: {
         user: {
@@ -22,6 +22,8 @@ class PostRepository {
           },
         },
       },
+      take,
+      skip,
     });
   }
 
