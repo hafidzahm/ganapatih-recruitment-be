@@ -29,9 +29,20 @@ class UserRepository {
     });
   }
 
-  static async getAll(username?: string | undefined) {
+  static async getAll(
+    take: number,
+    skip: number,
+    username?: string | undefined,
+  ) {
     if (!username) {
-      return await prisma.users.findMany();
+      return await prisma.users.findMany({
+        omit: {
+          password_hash: true,
+          created_at: true,
+        },
+        take,
+        skip,
+      });
     } else {
       return await prisma.users.findMany({
         where: {
@@ -43,6 +54,23 @@ class UserRepository {
         omit: {
           password_hash: true,
           created_at: true,
+        },
+        take,
+        skip,
+      });
+    }
+  }
+
+  static async count(username?: string) {
+    if (!username) {
+      return await prisma.users.count();
+    } else {
+      return await prisma.users.count({
+        where: {
+          username: {
+            contains: username,
+            mode: 'insensitive',
+          },
         },
       });
     }
