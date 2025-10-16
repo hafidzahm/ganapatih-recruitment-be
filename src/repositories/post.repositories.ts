@@ -24,6 +24,7 @@ class PostRepository {
       },
       take,
       skip,
+      orderBy: { created_at: 'desc' }, //urutan yang baru
     });
   }
 
