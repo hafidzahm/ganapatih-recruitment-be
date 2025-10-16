@@ -24,6 +24,20 @@ class PostRepository {
       },
     });
   }
+
+  static async totalGetFollowed(loginId: string) {
+    return await prisma.posts.count({
+      where: {
+        user: {
+          following: {
+            some: {
+              follower_id: loginId,
+            },
+          },
+        },
+      },
+    });
+  }
 }
 
 export default PostRepository;
