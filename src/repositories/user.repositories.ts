@@ -40,6 +40,10 @@ class UserRepository {
           password_hash: true,
           created_at: true,
         },
+        include: {
+          following: true,
+          followers: true,
+        },
         take,
         skip,
       });
@@ -54,6 +58,10 @@ class UserRepository {
         omit: {
           password_hash: true,
           created_at: true,
+        },
+        include: {
+          following: true,
+          followers: true,
         },
         take,
         skip,
