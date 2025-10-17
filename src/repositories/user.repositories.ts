@@ -9,6 +9,18 @@ class UserRepository {
       data: {
         username: data.username,
         password_hash: hashedPassword,
+        refresh_token: '',
+      },
+    });
+  }
+
+  static async updateRefresh(refreshToken: string, loginId: string) {
+    return await prisma.users.update({
+      where: {
+        id: loginId,
+      },
+      data: {
+        refresh_token: refreshToken,
       },
     });
   }
