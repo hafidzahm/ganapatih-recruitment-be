@@ -76,25 +76,34 @@ class UserController {
         };
       }
 
-      const token = JwtService.sign({ id: user.id, username: user.username });
       const refresh = JwtService.refresh({
         id: user.id,
         username: user.username,
+      });
+
+      const token = JwtService.sign({
+        id: user.id,
+        username: user.username,
+        refresh_token: refresh,
       });
 
       const refreshToken = `Bearer ${refresh}`;
       const bearerToken = `Bearer ${token}`;
 
       //simpan di db
-      await UserService.updateRefreshToken(refreshToken, user.id);
+      await UserService.updateRefreshToken(refresh, user.id);
 
       res.cookie('Authorization', bearerToken, {
         maxAge: 900000,
+        sameSite: 'lax',
         httpOnly: true,
+        secure: true,
       });
       res.cookie('Refresh', refreshToken, {
         maxAge: 900000,
+        sameSite: 'lax',
         httpOnly: true,
+        secure: true,
       });
       return res.status(200).json({
         token,
@@ -190,6 +199,7 @@ class UserController {
       res.cookie('Authorization', refresh, {
         maxAge: 900000,
         httpOnly: true,
+        sameSite: 'none',
       });
 
       console.log('Refresh token is used');
@@ -198,6 +208,42 @@ class UserController {
 
       return res.status(200).json({
         refresh,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async checkRefreshTokenOnDB(
+    req: CustomRequest,
+    res: Response,
+    next: NextFunction,
+  ) {
+    try {
+      const refresh = req?.user?.refresh_token;
+      console.log({ refresh });
+
+      if (!refresh) {
+        throw { type: 'AuthenticationError', message: 'Invalid refresh token' };
+      }
+
+      const validate = JwtService.verify(refresh);
+      console.log({ validate });
+
+      if (!validate) {
+        throw { type: 'AuthenticationError', message: 'Invalid refresh token' };
+      }
+
+      res.cookie('Authorization', `Bearer ${refresh}`, {
+        maxAge: 900000,
+        sameSite: 'lax',
+        httpOnly: true,
+        secure: true,
+      });
+      return res.status(200).json({
+        success: true,
+        message: 'Token is valid',
+        userid: req.user?.id,
       });
     } catch (error) {
       next(error);

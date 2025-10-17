@@ -5,8 +5,12 @@ import authMiddleware from '../middlewares/authMiddleware.ts';
 const userRoutes = Router();
 
 userRoutes.get('/users', UserController.getAll);
+
 userRoutes.post('/register', UserController.register);
 userRoutes.post('/login', UserController.login);
+// userRoutes.post('/refresh-token', UserController.refresh);
+
+userRoutes.get('/login', authMiddleware, UserController.checkRefreshTokenOnDB);
 userRoutes.post('/logout', authMiddleware, UserController.logout);
 userRoutes.post('/me', authMiddleware, UserController.getMyProfile);
 
