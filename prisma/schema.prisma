@@ -18,6 +18,7 @@ model Users {
   username      String   @unique
   password_hash String
   created_at    DateTime @default(now())
+  refresh_token String?
 
   posts     Posts[]
   followers Follows[] @relation("UserFollowerRelation")
