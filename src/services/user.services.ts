@@ -26,6 +26,11 @@ class UserService {
     return user;
   }
 
+  static async updateRefreshToken(refreshToken: string, loginId: string) {
+    const user = await UserRepository.updateRefresh(refreshToken, loginId);
+    return user;
+  }
+
   static async countAllUser(username?: string) {
     const user = await UserRepository.count(username);
     return user;
