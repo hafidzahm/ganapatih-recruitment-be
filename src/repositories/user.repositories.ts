@@ -3,12 +3,13 @@ import { prisma } from '../utils/prisma.ts';
 import type { RegisterSchemaType } from '../utils/schemas/user.schemas.ts';
 
 class UserRepository {
-  static async register(data: RegisterSchemaType) {
+  static async register(data: RegisterSchemaType, refreshToken?: string) {
     const hashedPassword = BcryptService.hashPassword(data.password);
     return await prisma.users.create({
       data: {
         username: data.username,
         password_hash: hashedPassword,
+        refresh_token: refreshToken || '',
       },
     });
   }
