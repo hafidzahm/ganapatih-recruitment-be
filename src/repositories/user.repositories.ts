@@ -14,13 +14,13 @@ class UserRepository {
     });
   }
 
-  static async updateRefresh(refreshToken: string, loginId: string) {
+  static async updateRefresh(loginId: string, refreshToken?: string) {
     return await prisma.users.update({
       where: {
         id: loginId,
       },
       data: {
-        refresh_token: refreshToken,
+        refresh_token: refreshToken || '',
       },
     });
   }

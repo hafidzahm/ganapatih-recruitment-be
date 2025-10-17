@@ -3,7 +3,7 @@ import UserService from '../services/user.services.ts';
 import { loginSchema, registerSchema } from '../utils/schemas/user.schemas.ts';
 import BcryptService from '../utils/bcrypt.ts';
 import JwtService from '../utils/jwt.ts';
-import type { CustomRequest } from '../types/customRequest.ts';
+import type { CustomRequest, UserPayload } from '../types/customRequest.ts';
 
 class UserController {
   static async register(req: Request, res: Response, next: NextFunction) {
@@ -115,21 +115,31 @@ class UserController {
 
   static async logout(req: CustomRequest, res: Response, next: NextFunction) {
     try {
-      const user = req?.user;
+      const user = req?.user as UserPayload;
+      const refresh = user.refresh_token;
       // console.log({ user });
-      if (!user) {
+      if (!refresh) {
         throw {
           type: 'BadRequest',
           message: 'Logout failed',
         };
-      } else {
-        res.clearCookie('Authorization');
-        res.clearCookie('Refresh');
-        return res.status(200).json({
-          success: true,
-          message: 'Logout success',
-        });
       }
+
+      const checkRefresh = JwtService.verify(refresh);
+      if (!checkRefresh) {
+        throw {
+          type: 'BadRequest',
+          message: 'Logout failed',
+        };
+      }
+
+      await UserService.updateRefreshToken(user.id);
+      res.clearCookie('Authorization');
+      res.clearCookie('Refresh');
+      return res.status(200).json({
+        success: true,
+        message: 'Logout success',
+      });
     } catch (error) {
       next(error);
     }

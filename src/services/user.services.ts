@@ -26,8 +26,8 @@ class UserService {
     return user;
   }
 
-  static async updateRefreshToken(refreshToken: string, loginId: string) {
-    const user = await UserRepository.updateRefresh(refreshToken, loginId);
+  static async updateRefreshToken(loginId: string, refreshToken?: string) {
+    const user = await UserRepository.updateRefresh(loginId, refreshToken);
     return user;
   }
 

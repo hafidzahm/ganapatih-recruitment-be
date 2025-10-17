@@ -11,7 +11,7 @@ userRoutes.post('/login', UserController.login);
 // userRoutes.post('/refresh-token', UserController.refresh);
 
 userRoutes.get('/login', authMiddleware, UserController.checkRefreshTokenOnDB);
-userRoutes.post('/logout', authMiddleware, UserController.logout);
+userRoutes.get('/logout', authMiddleware, UserController.logout);
 userRoutes.post('/me', authMiddleware, UserController.getMyProfile);
 
 export default userRoutes;
