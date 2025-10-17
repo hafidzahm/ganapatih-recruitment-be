@@ -14,6 +14,17 @@ class UserRepository {
     });
   }
 
+  static async updateRefresh(refreshToken: string, loginId: string) {
+    return await prisma.users.update({
+      where: {
+        id: loginId,
+      },
+      data: {
+        refresh_token: refreshToken,
+      },
+    });
+  }
+
   static async findByUsername(username: string) {
     return await prisma.users.findUnique({
       where: {
