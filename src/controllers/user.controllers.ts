@@ -77,9 +77,22 @@ class UserController {
       }
 
       const token = JwtService.sign({ id: user.id, username: user.username });
-      //simpen di cookies
+      const refresh = JwtService.refresh({
+        id: user.id,
+        username: user.username,
+      });
+
+      const refreshToken = `Bearer ${refresh}`;
       const bearerToken = `Bearer ${token}`;
+
+      //simpan di db
+      await UserService.updateRefreshToken(refreshToken, user.id);
+
       res.cookie('Authorization', bearerToken, {
+        maxAge: 900000,
+        httpOnly: true,
+      });
+      res.cookie('Refresh', refreshToken, {
         maxAge: 900000,
         httpOnly: true,
       });
@@ -101,10 +114,8 @@ class UserController {
           message: 'Logout failed',
         };
       } else {
-        res.cookie('Authorization', '', {
-          httpOnly: true,
-          expires: new Date(0),
-        });
+        res.clearCookie('Authorization');
+        res.clearCookie('Refresh');
         return res.status(200).json({
           success: true,
           message: 'Logout success',
@@ -161,6 +172,33 @@ class UserController {
           user,
         });
       }
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async refresh(req: CustomRequest, res: Response, next: NextFunction) {
+    try {
+      const refresh = req?.cookies['Refresh'];
+      if (!refresh) {
+        throw {
+          type: 'BadRequest',
+          message: 'Failed to refresh-token',
+        };
+      }
+
+      res.cookie('Authorization', refresh, {
+        maxAge: 900000,
+        httpOnly: true,
+      });
+
+      console.log('Refresh token is used');
+
+      //simpen di cookies
+
+      return res.status(200).json({
+        refresh,
+      });
     } catch (error) {
       next(error);
     }
