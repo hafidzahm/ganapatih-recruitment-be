@@ -91,7 +91,7 @@ class UserController {
       const bearerToken = `Bearer ${token}`;
 
       //simpan di db
-      await UserService.updateRefreshToken(refresh, user.id);
+      await UserService.updateRefreshToken(user.id, refresh);
 
       res.cookie('Authorization', bearerToken, {
         maxAge: 900000,
@@ -199,10 +199,16 @@ class UserController {
   static async refresh(req: CustomRequest, res: Response, next: NextFunction) {
     try {
       const refresh = req?.cookies['Refresh'];
+      if (refresh === 'null') {
+        throw {
+          type: 'AuthenticationError',
+          message: 'Invalid refresh-token',
+        };
+      }
       if (!refresh) {
         throw {
           type: 'BadRequest',
-          message: 'Failed to refresh-token',
+          message: 'Invalid refresh-token',
         };
       }
 

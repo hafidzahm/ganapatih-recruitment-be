@@ -38,7 +38,7 @@ export default async function authMiddleware(
   }
 
   const user = (await UserService.findUserById(isVerified.id)) as UserPayload;
-  console.log({ userInReqUser: user });
+  // console.log({ userInReqUser: user });
 
   req.user = {
     id: user.id,

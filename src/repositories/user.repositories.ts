@@ -20,7 +20,7 @@ class UserRepository {
         id: loginId,
       },
       data: {
-        refresh_token: refreshToken || '',
+        refresh_token: refreshToken || 'null',
       },
     });
   }
