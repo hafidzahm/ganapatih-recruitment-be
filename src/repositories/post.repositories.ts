@@ -15,9 +15,9 @@ class PostRepository {
     return await prisma.posts.findMany({
       where: {
         user: {
-          following: {
+          followers: {
             some: {
-              follower_id: loginId,
+              followee_id: loginId,
             },
           },
         },
