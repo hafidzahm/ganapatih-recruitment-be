@@ -5,7 +5,7 @@ class JwtService {
     console.log('1m expires');
 
     return jwt.sign(data, SECRET as string, {
-      expiresIn: '10s',
+      expiresIn: '1d',
     });
   }
   static refresh(data: {}) {
