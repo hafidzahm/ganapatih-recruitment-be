@@ -4,7 +4,7 @@ import authMiddleware from '../middlewares/authMiddleware.ts';
 
 const userRoutes = Router();
 
-userRoutes.get('/users', UserController.getAll);
+userRoutes.get('/users', authMiddleware, UserController.getAll);
 
 userRoutes.post('/register', UserController.register);
 userRoutes.post('/login', UserController.login);
