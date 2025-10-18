@@ -14,13 +14,21 @@ class PostRepository {
   static async getFollowed(loginId: string, take: number, skip: number) {
     return await prisma.posts.findMany({
       where: {
-        user: {
-          followers: {
-            some: {
-              followee_id: loginId,
+        OR: [
+          {
+            user: {
+              followers: {
+                some: {
+                  followee_id: loginId,
+                },
+              },
             },
           },
-        },
+          { user_id: { equals: loginId } },
+        ],
+      },
+      include: {
+        user: true,
       },
       take,
       skip,
@@ -31,13 +39,18 @@ class PostRepository {
   static async totalGetFollowed(loginId: string) {
     return await prisma.posts.count({
       where: {
-        user: {
-          followers: {
-            some: {
-              followee_id: loginId,
+        OR: [
+          {
+            user: {
+              followers: {
+                some: {
+                  followee_id: loginId,
+                },
+              },
             },
           },
-        },
+          { user_id: { equals: loginId } },
+        ],
       },
     });
   }

@@ -73,6 +73,7 @@ class PostController {
           userid: post.user_id,
           content: post.content,
           createdat: post.created_at as Date,
+          username: post.user.username,
         };
       });
       return res.status(200).json({
