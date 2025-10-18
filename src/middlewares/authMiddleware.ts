@@ -27,7 +27,7 @@ export default async function authMiddleware(
     };
   }
 
-  const isVerified = JwtService.verify(token) as UserPayload;
+  const isVerified = JwtService.verifyAccess(token) as UserPayload;
   console.log({ isVerified });
 
   if (!isVerified) {

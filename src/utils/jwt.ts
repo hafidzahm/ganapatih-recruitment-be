@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 class JwtService {
-  static sign(data: {}) {
+  static signAccess(data: {}) {
     const SECRET = process.env.JWT_SECRET;
     console.log('1m expires');
 
@@ -8,7 +8,7 @@ class JwtService {
       expiresIn: '1d',
     });
   }
-  static refresh(data: {}) {
+  static signRefresh(data: {}) {
     const SECRET = process.env.JWT_SECRET;
     console.log('7d expires');
 
@@ -17,7 +17,13 @@ class JwtService {
     });
   }
 
-  static verify(token: string) {
+  static verifyAccess(token: string) {
+    const SECRET = process.env.JWT_SECRET;
+
+    return jwt.verify(token, SECRET as string);
+  }
+
+  static verifyRefresh(token: string) {
     const SECRET = process.env.JWT_SECRET;
 
     return jwt.verify(token, SECRET as string);

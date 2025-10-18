@@ -76,12 +76,12 @@ class UserController {
         };
       }
 
-      const refresh = JwtService.refresh({
+      const refresh = JwtService.signRefresh({
         id: user.id,
         username: user.username,
       });
 
-      const token = JwtService.sign({
+      const token = JwtService.signAccess({
         id: user.id,
         username: user.username,
         refresh_token: refresh,
@@ -125,7 +125,7 @@ class UserController {
         };
       }
 
-      const checkRefresh = JwtService.verify(refresh);
+      const checkRefresh = JwtService.verifyRefresh(refresh);
       if (!checkRefresh) {
         throw {
           type: 'BadRequest',
@@ -209,7 +209,7 @@ class UserController {
         throw { type: 'AuthenticationError', message: 'Invalid refresh token' };
       }
 
-      const validate = JwtService.verify(refresh);
+      const validate = JwtService.verifyRefresh(refresh);
       console.log({ validate });
 
       if (!validate) {
