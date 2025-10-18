@@ -196,40 +196,6 @@ class UserController {
     }
   }
 
-  static async refresh(req: CustomRequest, res: Response, next: NextFunction) {
-    try {
-      const refresh = req?.cookies['Refresh'];
-      if (refresh === 'null') {
-        throw {
-          type: 'AuthenticationError',
-          message: 'Invalid refresh-token',
-        };
-      }
-      if (!refresh) {
-        throw {
-          type: 'BadRequest',
-          message: 'Invalid refresh-token',
-        };
-      }
-
-      res.cookie('Authorization', refresh, {
-        maxAge: 900000,
-        httpOnly: true,
-        sameSite: 'none',
-      });
-
-      console.log('Refresh token is used');
-
-      //simpen di cookies
-
-      return res.status(200).json({
-        refresh,
-      });
-    } catch (error) {
-      next(error);
-    }
-  }
-
   static async checkRefreshTokenOnDB(
     req: CustomRequest,
     res: Response,
@@ -239,7 +205,7 @@ class UserController {
       const refresh = req?.user?.refresh_token;
       console.log({ refresh });
 
-      if (!refresh) {
+      if (!refresh || refresh === 'null' || refresh === '') {
         throw { type: 'AuthenticationError', message: 'Invalid refresh token' };
       }
 
