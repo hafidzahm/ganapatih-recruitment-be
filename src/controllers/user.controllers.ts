@@ -95,13 +95,13 @@ class UserController {
 
       res.cookie('Authorization', bearerToken, {
         maxAge: 900000,
-        sameSite: 'lax',
+        sameSite: 'none',
         httpOnly: true,
         secure: true,
       });
       res.cookie('Refresh', refreshToken, {
         maxAge: 900000,
-        sameSite: 'lax',
+        sameSite: 'none',
         httpOnly: true,
         secure: true,
       });
@@ -218,7 +218,7 @@ class UserController {
 
       res.cookie('Authorization', `Bearer ${refresh}`, {
         maxAge: 900000,
-        sameSite: 'lax',
+        sameSite: 'none',
         httpOnly: true,
         secure: true,
       });
