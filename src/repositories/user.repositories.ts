@@ -38,6 +38,14 @@ class UserRepository {
       where: {
         id,
       },
+      include: {
+        posts: true,
+        followers: true,
+        following: true,
+      },
+      omit: {
+        password_hash: true,
+      },
     });
   }
 
