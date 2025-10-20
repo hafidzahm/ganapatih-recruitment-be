@@ -4,11 +4,12 @@ import bodyParser from 'body-parser';
 import errorHandler from './middlewares/errorHandler.ts';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
+const BASE_CLIENT = process.env.BASE_CLIENT;
 const app = express();
 
 app.use(
   cors({
-    origin: '*',
+    origin: BASE_CLIENT,
     credentials: true,
   }),
 );
