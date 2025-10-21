@@ -12,6 +12,11 @@ const userContent = {
   content: 'Apakabar duniaaaaa',
 };
 
+const charReject = {
+  content:
+    'eysoisanzxeuvdbcpkogacohxxxgvvexjsqdehuobcoduisuazwhwtjypytprgyh syleupwedatwqbeqijkvhvelrdxfvktnapozrwnxqpayfdumvkbydwfpdsksgayxbqobmzfsrsfxiyregrrubegizrnsajagoikaqglvglizjzyqfriaqlcvfhxwsytdsfioewitv',
+}; //201 character
+
 let userToken: string;
 let userId: string;
 
@@ -41,7 +46,7 @@ describe('TC-1: Registration & Login', () => {
 });
 
 describe('TC-2: Create Post', () => {
-  test('Positive: Successfully creates a post ≤ 200 characters', async () => {
+  test('Positive: Successfully creates a post ≤ 200 characters (201)', async () => {
     const response = await request(app)
       .post('/api/posts')
       .send(userContent)
@@ -55,5 +60,18 @@ describe('TC-2: Create Post', () => {
     expect(response.body).toHaveProperty('userid');
     expect(response.body.userid).toEqual(userId);
     expect(response.body.content).toEqual(userContent.content);
+  });
+  test('Negative: Content > 200 characters -> (422)', async () => {
+    const response = await request(app)
+      .post('/api/posts')
+      .send(charReject)
+      .set('Cookie', [`Authorization=Bearer ${userToken}`]);
+    console.log(userToken);
+
+    expect(response.status).toBe(422);
+    expect(response.body).toHaveProperty('message');
+    expect(response.body).toHaveProperty('success');
+    expect(response.body.message).toEqual('Column character limit has reached');
+    expect(response.body.success).toEqual(false);
   });
 });
