@@ -206,16 +206,10 @@ describe('TC-4: Feed', () => {
     expect(response.body.posts[0]).toHaveProperty('username');
     expect(response.body.posts[0].username).toEqual(newestPost.username);
   });
-  test('Negative: Not following anyone -> empty result', async () => {
+  test('Negative: Not following anyone (user 3 is not following anyone) -> empty result', async () => {
     const response = await request(app)
       .get(`/api/feed?page=1&limit=10`)
-      .set('Cookie', [`Authorization=Bearer ${user3Token}`]); //user
-
-    const newestPost = {
-      content: user2NewestContent.content,
-      username: user2.username,
-      userid: user2Id,
-    };
+      .set('Cookie', [`Authorization=Bearer ${user3Token}`]);
 
     expect(response.status).toBe(200);
     expect(response.body).toHaveProperty('dataPerPage');
