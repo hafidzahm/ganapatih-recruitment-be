@@ -29,6 +29,8 @@ const user2NewestContent = {
   content: 'newest',
 };
 
+let newestDatePost: string;
+let newestidPost: string;
 let userToken: string;
 let user2Token: string;
 let userId: string;
@@ -139,5 +141,48 @@ describe('TC-3: Follow / Unfollow', () => {
     expect(response.status).toBe(404);
     expect(response.body).toHaveProperty('message');
     expect(response.body.message).toEqual(`User not found`);
+  });
+});
+describe('TC-4: Feed', () => {
+  test('Positive: User2 Successfully creates a newest post ≤ 200 characters (201)', async () => {
+    const response = await request(app)
+      .post('/api/posts')
+      .send(user2NewestContent)
+      .set('Cookie', [`Authorization=Bearer ${user2Token}`]);
+
+    expect(response.status).toBe(201);
+    expect(response.body).toHaveProperty('content');
+    expect(response.body).toHaveProperty('createdat');
+    expect(response.body).toHaveProperty('id');
+    expect(response.body).toHaveProperty('userid');
+    expect(response.body.userid).toEqual(user2Id);
+    expect(response.body.content).toEqual(user2NewestContent.content);
+    newestDatePost = response.body.createdat;
+    newestDatePost = response.body.id;
+  });
+  test('Positive: Display posts from followed users, sorted by newest.', async () => {
+    const response = await request(app)
+      .get(`/api/feed?page=1&limit=10`)
+      .set('Cookie', [`Authorization=Bearer ${userToken}`]); //user
+
+    const newestPost = {
+      content: user2NewestContent.content,
+      username: user2.username,
+      userid: user2Id,
+    };
+
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty('dataPerPage');
+    expect(response.body).toHaveProperty('page');
+    expect(response.body).toHaveProperty('posts');
+    expect(response.body.posts).toBeInstanceOf(Array);
+    expect(response.body.posts[0]).toHaveProperty('content'); // first array (newest)
+    expect(response.body.posts[0].content).toEqual(newestPost.content);
+    expect(response.body.posts[0]).toHaveProperty('createdat');
+    expect(response.body.posts[0]).toHaveProperty('id');
+    expect(response.body.posts[0]).toHaveProperty('userid');
+    expect(response.body.posts[0].userid).toEqual(newestPost.userid);
+    expect(response.body.posts[0]).toHaveProperty('username');
+    expect(response.body.posts[0].username).toEqual(newestPost.username);
   });
 });
