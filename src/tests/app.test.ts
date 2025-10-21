@@ -118,3 +118,26 @@ describe('TC-2: Create Post', () => {
     expect(response.body.success).toEqual(false);
   });
 });
+
+describe('TC-3: Follow / Unfollow', () => {
+  test('Positive: Follow a valid user -> saved in DB (200)', async () => {
+    const response = await request(app)
+      .post(`/api/follow/${user2Id}`)
+      .set('Cookie', [`Authorization=Bearer ${userToken}`]); //user follow user2
+
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty('message');
+    expect(response.body.message).toEqual(
+      `You are now following user ${user2Id}`,
+    );
+  });
+  test('Negative: Follow a non-existent user -> (404).', async () => {
+    const response = await request(app)
+      .post(`/api/follow/${user2Id + 90909090}`)
+      .set('Cookie', [`Authorization=Bearer ${userToken}`]); //user follow non exist user
+
+    expect(response.status).toBe(404);
+    expect(response.body).toHaveProperty('message');
+    expect(response.body.message).toEqual(`User not found`);
+  });
+});
