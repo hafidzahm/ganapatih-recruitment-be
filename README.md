@@ -59,6 +59,8 @@ DIRECT_URL=URLDATABASEPRISMAFORMIGRATEPROD
 JWT_SECRET=JWTSECRET
 BASE_CLIENT=YOURCLIENTAPPLINK
 PORT=3000
+
+untuk testing, DATABASE_URL bisa disesuaikan ke postgresql://prisma:prisma@localhost:5433/tests (mengacu docker-compose.yml)
 ```
 
 ## 3) Prisma — Generate & Migrate
