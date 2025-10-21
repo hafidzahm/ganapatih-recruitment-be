@@ -59,6 +59,7 @@ class UserRepository {
         omit: {
           password_hash: true,
           created_at: true,
+          refresh_token: true,
         },
         include: {
           following: true,
@@ -78,6 +79,7 @@ class UserRepository {
         omit: {
           password_hash: true,
           created_at: true,
+          refresh_token: true,
         },
         include: {
           following: true,
