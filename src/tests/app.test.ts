@@ -140,6 +140,15 @@ describe('TC-2: Create Post', () => {
     expect(response.body.message).toEqual('Column character limit has reached');
     expect(response.body.success).toEqual(false);
   });
+  test('Negative: attempt to creates a post ≤ 200 characters before login (401)', async () => {
+    const response = await request(app).post('/api/posts').send(userContent);
+
+    expect(response.status).toBe(401);
+    expect(response.body).toHaveProperty('message');
+    expect(response.body).toHaveProperty('success');
+    expect(response.body.message).toEqual('Invalid token');
+    expect(response.body.success).toEqual(false);
+  });
 });
 
 describe('TC-3: Follow / Unfollow', () => {
@@ -153,6 +162,15 @@ describe('TC-3: Follow / Unfollow', () => {
     expect(response.body.message).toEqual(
       `You are now following user ${user2Id}`,
     );
+  });
+  test('Negative: Follow a valid user without login (401)', async () => {
+    const response = await request(app).post(`/api/follow/${user2Id}`);
+
+    expect(response.status).toBe(401);
+    expect(response.body).toHaveProperty('message');
+    expect(response.body).toHaveProperty('success');
+    expect(response.body.message).toEqual('Invalid token');
+    expect(response.body.success).toEqual(false);
   });
   test('Negative: Follow a non-existent user -> (404).', async () => {
     const response = await request(app)
@@ -205,6 +223,15 @@ describe('TC-4: Feed', () => {
     expect(response.body.posts[0].userid).toEqual(newestPost.userid);
     expect(response.body.posts[0]).toHaveProperty('username');
     expect(response.body.posts[0].username).toEqual(newestPost.username);
+  });
+  test('Negative: Display posts without login -> (401)', async () => {
+    const response = await request(app).get(`/api/feed?page=1&limit=10`);
+
+    expect(response.status).toBe(401);
+    expect(response.body).toHaveProperty('message');
+    expect(response.body).toHaveProperty('success');
+    expect(response.body.message).toEqual('Invalid token');
+    expect(response.body.success).toEqual(false);
   });
   test('Negative: Not following anyone (user 3 is not following anyone) -> empty result', async () => {
     const response = await request(app)
