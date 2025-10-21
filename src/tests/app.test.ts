@@ -13,6 +13,11 @@ const user2 = {
   password: '12345',
 };
 
+const user3 = {
+  username: 'emptyPost',
+  password: '12345',
+};
+
 const userContent = {
   content: 'Apakabar duniaaaaa',
 };
@@ -33,8 +38,10 @@ let newestDatePost: string;
 let newestidPost: string;
 let userToken: string;
 let user2Token: string;
+let user3Token: string;
 let userId: string;
 let user2Id: string;
+let user3Id: string;
 
 describe('TC-1: Registration & Login', () => {
   test('Positive: A new user2 successfully signs up (201)', async () => {
@@ -44,6 +51,14 @@ describe('TC-1: Registration & Login', () => {
     expect(response.body).toHaveProperty('username');
     expect(response.body.username).toEqual(user2.username);
     user2Id = response.body.id;
+  });
+  test('Positive: A new user3 successfully signs up (201)', async () => {
+    const response = await request(app).post('/api/register').send(user3);
+    expect(response.status).toBe(201);
+    expect(response.body).toHaveProperty('id');
+    expect(response.body).toHaveProperty('username');
+    expect(response.body.username).toEqual(user3.username);
+    user3Id = response.body.id;
   });
   test('Positive: A new user successfully signs up (201)', async () => {
     const response = await request(app).post('/api/register').send(user);
@@ -64,6 +79,12 @@ describe('TC-1: Registration & Login', () => {
     expect(response.status).toBe(200);
     expect(response.body).toHaveProperty('token');
     user2Token = response.body.token;
+  });
+  test('Positive: A new user3 successfully login and return token (200)', async () => {
+    const response = await request(app).post('/api/login').send(user3);
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty('token');
+    user3Token = response.body.token;
   });
 
   test('Negative: Duplicate Simple Wireframe Login/Register username (409)', async () => {
@@ -184,5 +205,24 @@ describe('TC-4: Feed', () => {
     expect(response.body.posts[0].userid).toEqual(newestPost.userid);
     expect(response.body.posts[0]).toHaveProperty('username');
     expect(response.body.posts[0].username).toEqual(newestPost.username);
+  });
+  test('Negative: Not following anyone -> empty result', async () => {
+    const response = await request(app)
+      .get(`/api/feed?page=1&limit=10`)
+      .set('Cookie', [`Authorization=Bearer ${user3Token}`]); //user
+
+    const newestPost = {
+      content: user2NewestContent.content,
+      username: user2.username,
+      userid: user2Id,
+    };
+
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty('dataPerPage');
+    expect(response.body).toHaveProperty('page');
+    expect(response.body).toHaveProperty('posts');
+    expect(response.body.posts).toBeInstanceOf(Array);
+    expect(response.body.posts).toHaveLength(0);
+    expect(response.body.totalPage).toEqual(0);
   });
 });
