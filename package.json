@@ -11,7 +11,7 @@
     "lint": "eslint 'src/**/*.ts'",
     "docker:up": "docker compose up -d",
     "docker:down": "docker compose down",
-    "test": "docker compose up -d && npx dotenv -e .env.test prisma migrate reset && npx dotenv -e .env.test prisma migrate deploy && node --experimental-vm-modules ./node_modules/jest/bin/jest.js --config=jest.config.cjs -i && docker compose down"
+    "test": "docker compose up -d &&  npx dotenv -e .env.test prisma migrate reset && npx dotenv -e .env.test prisma migrate deploy && node --experimental-vm-modules ./node_modules/jest/bin/jest.js --config=jest.config.cjs -i && docker compose down"
   },
   "keywords": [],
   "author": "",
